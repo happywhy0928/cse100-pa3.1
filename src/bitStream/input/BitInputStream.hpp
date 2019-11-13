@@ -21,7 +21,7 @@ class BitInputStream {
 
   public:
     /* TODO: add function header and implement */
-    explicit BitInputStream(istream& is) : in(is){};
+    explicit BitInputStream(istream& is) : in(is), buf(0), nbits(0){};
 
     /* TODO: add function header */
     void fill();
