@@ -21,7 +21,7 @@ void pseudoCompression(string inFileName, string outFileName) {
     ifstream inputFile;
     ofstream compressFile;
     vector<byte> content;
-    vector<unsigned int> freqs(ASCII_VALUE , 0);
+    vector<unsigned int> freqs(ASCII_VALUE, 0);
     int temp = 0;
     byte next;
     compressFile.open(outFileName);
@@ -79,7 +79,7 @@ void trueCompression(string inFileName, string outFileName) {
     ifstream inputFile;
     ofstream compressFile;
     vector<byte> content;
-    vector<unsigned int> freqs(ASCII_VALUE , 0);
+    vector<unsigned int> freqs(ASCII_VALUE, 0);
     int temp = 0;
     int total = 0;
     byte next;
