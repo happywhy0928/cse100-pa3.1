@@ -19,6 +19,8 @@ using namespace std;
  * Huffman Tree class
  * which build the tree according to the algorithm
  * Citation: from the piazza post and sunday's info session and discussion
+ * https://stackoverflow.com/questions/759707/efficient-way-of-storing-huffman-tree
+ * this URL for optimize the header
  */
 class HCTree {
   private:
@@ -35,6 +37,8 @@ class HCTree {
      * Para: node the current node to record
      *       out the outputstream(ostream) to record the structure
      * Citation: from the piazza post and sunday's info session
+     *            https://stackoverflow.com/questions/759707/efficient-way-of-storing-huffman-tree
+     * this URL for optimize the header
      */
     void helperForwrite(HCNode* node, BitOutputStream& out);
     /**
@@ -42,6 +46,8 @@ class HCTree {
      * Para: in is the inputstream to read the header
      * Return the current node and build correspond according to the header
      * Citation: from the piazza post and sunday's info session
+     *          https://stackoverflow.com/questions/759707/efficient-way-of-storing-huffman-tree
+     * this URL for optimize the header
      */
     HCNode* helperForRead(BitInputStream& in);
 
@@ -98,12 +104,16 @@ class HCTree {
      * write the header
      * para: out the outputstream(ostream) to record
      * Citation: from the piazza post and sunday's info session
+     *           https://stackoverflow.com/questions/759707/efficient-way-of-storing-huffman-tree
+     * this URL for optimize the header
      */
     void writeHeader(BitOutputStream& out);
     /**
      * Reader the header the build the entire tree from the header
      * Para: in is the inputstream(istream) to read the header
      * Citation: from the piazza post and sunday's info session
+     *          https://stackoverflow.com/questions/759707/efficient-way-of-storing-huffman-tree
+     * this URL for optimize the header
      */
     void readHeader(BitInputStream& in);
 };

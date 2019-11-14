@@ -174,6 +174,8 @@ void HCTree::deleteAll(HCNode* node) {
  * write the header
  * para: out the outputstream(ostream) to record
  * Citation: from the piazza post and sunday's info session
+ *          https://stackoverflow.com/questions/759707/efficient-way-of-storing-huffman-tree
+ * this URL for optimize the header
  */
 void HCTree::writeHeader(BitOutputStream& out) { helperForwrite(root, out); }
 /**
@@ -181,6 +183,8 @@ void HCTree::writeHeader(BitOutputStream& out) { helperForwrite(root, out); }
  * Para: node the current node to record
  *       out the outputstream(ostream) to record the structure
  * Citation: from the piazza post and sunday's info session
+ *          https://stackoverflow.com/questions/759707/efficient-way-of-storing-huffman-tree
+ * this URL for optimize the header
  */
 void HCTree::helperForwrite(HCNode* node, BitOutputStream& out) {
     // write for the child node
@@ -203,6 +207,8 @@ void HCTree::helperForwrite(HCNode* node, BitOutputStream& out) {
  * Reader the header the build the entire tree from the header
  * Para: in is the inputstream(istream) to read the header
  * Citation: from the piazza post and sunday's info session
+ *           https://stackoverflow.com/questions/759707/efficient-way-of-storing-huffman-tree
+ * this URL for optimize the header
  */
 void HCTree::readHeader(BitInputStream& in) { root = helperForRead(in); }
 /**
@@ -210,6 +216,8 @@ void HCTree::readHeader(BitInputStream& in) { root = helperForRead(in); }
  * Para: in is the inputstream to read the header
  * Return the current node and build correspond according to the header
  * Citation: from the piazza post and sunday's info session
+ *          https://stackoverflow.com/questions/759707/efficient-way-of-storing-huffman-tree
+ * this URL for optimize the header
  */
 HCNode* HCTree::helperForRead(BitInputStream& in) {
     // create the parent node if read 0
