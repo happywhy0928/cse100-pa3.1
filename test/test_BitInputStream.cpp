@@ -1,3 +1,8 @@
+/**
+ * Author: Hongyu Wang
+ *         Carghin Rekani
+ * Overview: unit test for BitInputStream
+ */
 #include <iostream>
 #include <string>
 
@@ -6,7 +11,7 @@
 
 using namespace std;
 using namespace testing;
-
+// simple test
 TEST(BitInputStreamTests, SIMPLE_TEST) {
     string bitsStr = "10000000";
     string ascii = string(1, stoi(bitsStr, nullptr, 2));

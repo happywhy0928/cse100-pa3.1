@@ -1,3 +1,8 @@
+/**
+ * Author: Hongyu Wang
+ *         Carghin Rekani
+ * Overview: unit test for BitInputStream
+ */
 #include <iostream>
 #include <string>
 
@@ -6,7 +11,7 @@
 
 using namespace std;
 using namespace testing;
-
+// simple test
 TEST(BitOutputStreamTests, SIMPLE_TEST) {
     stringstream ss;
     BitOutputStream bos(ss);
