@@ -417,6 +417,13 @@ TEST_F(Single1HCTreeFixture, TEST_ENCODE17) {
     tree1.encode('¡', os);
     ASSERT_NE(os.str(), "0");
     BitOutputStream check(os);
-    tree1.encode('A', check);
+    tree1.encode('¡', check);
     tree1.writeHeader(check);
+}
+TEST_F(Complex5HCTreeFixture, TEST_DECODE17) {
+    istringstream is("0");
+    ASSERT_NE(tree1.decode(is), '¡');
+    BitInputStream check(is);
+    byte result = tree1.decode(check);
+    tree1.readHeader(check);
 }
