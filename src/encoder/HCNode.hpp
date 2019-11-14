@@ -1,7 +1,7 @@
 /**
- * TODO: file header
- *
- * Author:
+ * Author: Hongyu Wang
+ *         Carghin Rekani
+ * Overview: the header file for HCNode
  */
 #ifndef HCNODE_HPP
 #define HCNODE_HPP
@@ -40,7 +40,6 @@ ostream& operator<<(ostream& stm, const HCNode& n) {
  * has higher prioruty.
  */
 struct HCNodePtrComp {
-    /* TODO */
     bool operator()(HCNode*& lhs, HCNode*& rhs) const {
         if (lhs->count != rhs->count) {
             return lhs->count > rhs->count;

@@ -1,7 +1,7 @@
 /**
- * TODO: file header
- *
- * Author:
+ * Author: Hongyu Wang
+ *         Carghin Rekani
+ * Overview: header file for BitOutputStream
  */
 #ifndef BITOUTPUTSTREAM_HPP
 #define BITOUTPUTSTREAM_HPP
@@ -12,7 +12,9 @@ typedef unsigned char byte;
 
 using namespace std;
 
-/** TODO: class header */
+/**
+ * use given ostream to write bit for compress
+ */
 class BitOutputStream {
   private:
     char buf;      // one byte buffer of bits
@@ -20,13 +22,22 @@ class BitOutputStream {
     ostream& out;  // reference to the output stream to use
 
   public:
-    /* TODO: add function header and implement */
+    /**
+     * Contructor: initialize a BitOutputStream that used given ostream for
+     * output
+     */
     explicit BitOutputStream(ostream& os) : out(os), buf(0), nbits(0){};
-
-    /* TODO: add function header */
+    /**
+     * Sends the buffer to the output stream, and then clear the buffer to allow
+     * further use
+     */
     void flush();
 
-    /* TODO: add function header */
+    /**
+     * Writes the least significant bit of the given int to the bit buffer.
+     * Flushes the buffer first if it is full first check if the buffer is full
+     * or not (full then flush) Para: i - an integer either 1 or 0
+     */
     void writeBit(int i);
 };
 

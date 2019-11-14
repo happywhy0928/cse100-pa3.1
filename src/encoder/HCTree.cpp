@@ -1,18 +1,26 @@
 /**
- * TODO: file header
- *
- * Author:
+ * Author: Hongyu Wang
+ *         Carghin Rekani
+ * Overview: the implementation file of HCTree
  */
 #include "HCTree.hpp"
 #include <queue>
 #include <stack>
-
-/* TODO */
+#define MAX_BIT 8
+#define ASCII_VALUE 256
+/**
+ * Destructor of the HCTree
+ */
 HCTree::~HCTree() { deleteAll(root); }
-/* TODO */
+/**
+ * use the huffman algorithm to build the tree
+ * freqs is a vector of ints that freqs[i] is the frequency of occurence
+ * of byte i correspond to ascii table
+ * Para: freqs -  the frequency vector to build the tree
+ */
 void HCTree::build(const vector<unsigned int>& freqs) {
     std::priority_queue<HCNode*, std::vector<HCNode*>, HCNodePtrComp> sets;
-
+    // create the vector first to access each char Node which freq > 0
     for (unsigned int i = 0; i < freqs.size(); i++) {
         if (freqs[i] > 0) {
             HCNode* temp = new HCNode(freqs[i], i, 0, 0, 0);
@@ -25,6 +33,7 @@ void HCTree::build(const vector<unsigned int>& freqs) {
     HCNode* left = nullptr;
     HCNode* temp = nullptr;
 
+    // specify case when only have one kind of character
     if (sets.size() == 1) {
         left = sets.top();
         sets.pop();
@@ -33,20 +42,17 @@ void HCTree::build(const vector<unsigned int>& freqs) {
         left->p = parent;
         sets.push(parent);
     }
+    // case when have more than one kind of character
     while (sets.size() > 1) {
+        // get the two nodes with least freq
         left = sets.top();
         sets.pop();
-
         right = sets.top();
         sets.pop();
+        // check if the count equal or not to check the priority to build tree
         if (left->count == right->count) {
-            if (left->symbol > right->symbol) {
-                parent = new HCNode((left->count) + (right->count),
-                                    left->symbol, left, right, 0);
-            } else {
-                parent = new HCNode((left->count) + (right->count),
-                                    right->symbol, left, right, 0);
-            }
+            parent = new HCNode((left->count) + (right->count), left->symbol,
+                                left, right, 0);
         } else {
             parent = new HCNode((left->count) + (right->count), right->symbol,
                                 left, right, 0);
@@ -57,14 +63,20 @@ void HCTree::build(const vector<unsigned int>& freqs) {
 
         sets.push(parent);
     }
+    // the node left is the root of the tree
     root = sets.top();
     root->p = nullptr;
 }
 
-/* TODO */
+/**
+ * write to the given BitOutputStream to code the specific symbol
+ * Param: symbol- the current symbol to code
+ *        out - the BitOutputStream to write
+ */
 void HCTree::encode(byte symbol, BitOutputStream& out) const {
     HCNode* curr = leaves[symbol];
     stack<bool> result;
+    // try to find the path to root and record
     while (curr != nullptr && curr->p != nullptr) {
         if (curr->p->c0 == curr) {
             result.push(0);
@@ -80,11 +92,16 @@ void HCTree::encode(byte symbol, BitOutputStream& out) const {
     }
 }
 
-/* TODO */
+/**
+ * write to the given ostream to code the specific symbol
+ * Param: symbol- the current symbol to code
+ *        out - the ostream to write
+ */
 void HCTree::encode(byte symbol, ostream& out) const {
     HCNode* curr = leaves[symbol];
     stack<int> result;
 
+    // find the path to the root and record
     while (curr != nullptr && curr->p != nullptr) {
         if (curr->p->c0 == curr) {
             result.push(0);
@@ -99,8 +116,13 @@ void HCTree::encode(byte symbol, ostream& out) const {
     }
 }
 
-/* TODO */
+/**
+ * return the symbol coded in the sequence of bits from the istream
+ * para: in-the istream to read
+ * Return: return the corresponding byte
+ */
 byte HCTree::decode(BitInputStream& in) const {
+    // start from root
     HCNode* curr = root;
     bool input;
     while (curr->c0 != nullptr && curr->c1 != nullptr) {
@@ -114,7 +136,11 @@ byte HCTree::decode(BitInputStream& in) const {
     return curr->symbol;
 }
 
-/* TODO */
+/**
+ * decode the symbol coded in sequency of bits from istream
+ * para: in-the istream to read
+ * Return: return the corresponding byte
+ */
 byte HCTree::decode(istream& in) const {
     HCNode* curr = root;
     byte input;
@@ -130,8 +156,12 @@ byte HCTree::decode(istream& in) const {
     }
     return curr->symbol;
 }
-
+/**
+ *  helper method to delete all the nodes recursively
+ *  para: node the current node to delete its subtree
+ */
 void HCTree::deleteAll(HCNode* node) {
+    // recursive call
     if (node->c0) {
         deleteAll(node->c0);
     }
@@ -140,41 +170,66 @@ void HCTree::deleteAll(HCNode* node) {
     }
     delete node;
 }
+/**
+ * write the header
+ * para: out the outputstream(ostream) to record
+ * Citation: from the piazza post and sunday's info session
+ */
 void HCTree::writeHeader(BitOutputStream& out) { helperForwrite(root, out); }
-
+/**
+ * Helper method to write the tree structure in the header
+ * Para: node the current node to record
+ *       out the outputstream(ostream) to record the structure
+ * Citation: from the piazza post and sunday's info session
+ */
 void HCTree::helperForwrite(HCNode* node, BitOutputStream& out) {
+    // write for the child node
     if (node->c0 == nullptr && node->c1 == nullptr) {
-        byte symbol = node->symbol;
         out.writeBit(1);
-        for (unsigned int i = 0; i < 8; i++) {
+        byte symbol = node->symbol;
+        for (unsigned int i = 0; i < MAX_BIT; i++) {
             byte temp = symbol << i;
-            out.writeBit(temp >> 8 - 1);
+            out.writeBit(temp >> MAX_BIT - 1);
         }
-    } else {
+    }
+    // write 0 for other node
+    else {
         out.writeBit(0);
         helperForwrite(node->c0, out);
         helperForwrite(node->c1, out);
     }
 }
-
+/**
+ * Reader the header the build the entire tree from the header
+ * Para: in is the inputstream(istream) to read the header
+ * Citation: from the piazza post and sunday's info session
+ */
 void HCTree::readHeader(BitInputStream& in) { root = helperForRead(in); }
-
+/**
+ * Helper method to read the header and build the node from the header
+ * Para: in is the inputstream to read the header
+ * Return the current node and build correspond according to the header
+ * Citation: from the piazza post and sunday's info session
+ */
 HCNode* HCTree::helperForRead(BitInputStream& in) {
-    if (in.readBit() == 1) {
+    // create the parent node if read 0
+    if (in.readBit() == 0) {
+        HCNode* left = helperForRead(in);
+        HCNode* right = helperForRead(in);
+        HCNode* root = new HCNode(0, left->symbol);
+        left->p = root;
+        right->p = root;
+        root->c0 = left;
+        root->c1 = right;
+        return root;
+    }
+    // create the child node if read 1
+    else {
         byte temp = 0;
-        for (unsigned int i = 0; i < 8; i++) {
-            // byte temp1 = is.readBit() << (8 - i - 1);
-            temp = temp | (in.readBit() << (8 - i - 1));
+        for (unsigned int i = 0; i < MAX_BIT; i++) {
+            byte temp1 = in.readBit() << (MAX_BIT - i - 1);
+            temp = temp | temp1;
         }
         return new HCNode(0, temp);
-    } else {
-        HCNode* c0 = helperForRead(in);
-        HCNode* c1 = helperForRead(in);
-        HCNode* root = new HCNode(0, c0->symbol);
-        root->c0 = c0;
-        root->c1 = c1;
-        c0->p = root;
-        c1->p = root;
-        return root;
     }
 }
